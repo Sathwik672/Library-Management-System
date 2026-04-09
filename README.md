@@ -1,10 +1,10 @@
-# 📚 Library Management System
+# Library Management System
 
 This project is a web-based library management system designed to manage books, members, and borrowing activities in a simple and efficient way. It helps automate common library tasks such as issuing books, returning them, and keeping track of records.
 
 ---
 
-## ✨ Features
+## Features
 
 * **User Management**
   Add and manage library members easily.
@@ -28,7 +28,7 @@ This project is a web-based library management system designed to manage books, 
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 * **Backend:** Java 21 with Javalin
 * **Frontend:** HTML, CSS, JavaScript
@@ -37,7 +37,7 @@ This project is a web-based library management system designed to manage books, 
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 * Java Development Kit (JDK) 21 or higher
 * Apache Maven
@@ -46,7 +46,7 @@ This project is a web-based library management system designed to manage books, 
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 1. Clone the repository to your local system
 2. Ensure your MySQL server is running
@@ -57,7 +57,7 @@ This project is a web-based library management system designed to manage books, 
 
 ---
 
-## ▶️ Running the Application
+## Running the Application
 
 Run the following commands in the project root directory:
 
@@ -68,7 +68,7 @@ After running, the application will start (check console for the localhost port)
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 * `src/main/java` – Backend logic, services, and database operations
 * `src/main/resources/static` – Frontend files (HTML, CSS, JS)
@@ -77,6 +77,6 @@ After running, the application will start (check console for the localhost port)
 
 ---
 
-## 👍 Final Note
+## Final Note
 
 This project demonstrates the basic working of a library management system, including book handling, user management, and transaction tracking. It is useful for understanding full-stack development using Java and MySQL.
