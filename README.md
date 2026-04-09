@@ -2,6 +2,9 @@
 
 This project is a web-based library management system designed to manage books, members, and borrowing activities in a simple and efficient way. It helps automate common library tasks such as issuing books, returning them, and keeping track of records.
 
+Demo
+Watch the demo video here : https://drive.google.com/file/d/1IZRGRqGce-kPzU56OkGLyZoz1X7QwQPU/view?usp=sharing
+
 ---
 
 ## Features
