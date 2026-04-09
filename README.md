@@ -50,7 +50,7 @@ This project is a web-based library management system designed to manage books, 
 
 1. Clone the repository to your local system
 2. Ensure your MySQL server is running
-3. Create a database (e.g., `library_db`)
+3. Create a database
 4. Execute the provided SQL file to create tables
 5. Update database credentials in:
    `src/main/java/com/library/util/DBUtil.java`
@@ -62,6 +62,7 @@ This project is a web-based library management system designed to manage books, 
 Run the following commands in the project root directory:
 
 mvn clean compile
+
 mvn exec:java "-Dexec.mainClass=com.library.ui.LibraryApp"
 
 After running, the application will start (check console for the localhost port).
