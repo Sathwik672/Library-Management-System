@@ -86,7 +86,7 @@ public class LibraryDao {
                 checkUser.setInt(1, userId);
                 try (ResultSet userRs = checkUser.executeQuery()) {
                     if (!userRs.next()) {
-                        return "❌ User not found!";
+                        return " User not found!";
                     }
                 }
             }
