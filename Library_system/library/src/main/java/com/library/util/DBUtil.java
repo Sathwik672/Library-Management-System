@@ -10,7 +10,6 @@ public class DBUtil {
         try {
             Class.forName("org.sqlite.JDBC");
 
-            // Connect to local SQLite file database
             Connection con = DriverManager.getConnection("jdbc:sqlite:library.db");
 
             try (Statement stmt = con.createStatement()) {
@@ -22,7 +21,7 @@ public class DBUtil {
             return con;
 
         } catch (Exception e) {
-            System.out.println("❌ DATABASE CONNECTION FAILED!");
+            System.out.println(" DATABASE CONNECTION FAILED!");
             e.printStackTrace();
             return null;
         }
