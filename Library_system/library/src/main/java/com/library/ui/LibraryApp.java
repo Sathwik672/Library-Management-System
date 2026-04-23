@@ -22,7 +22,6 @@ public class LibraryApp {
 
         app.get("/", ctx -> ctx.redirect("/index.html"));
 
-        // ================= BOOK =================
 
         app.post("/add-book", ctx -> {
             String title = ctx.formParam("title");
@@ -86,7 +85,6 @@ public class LibraryApp {
             }
         });
 
-        // ================= USER =================
 
         app.post("/register", ctx -> {
             String user = ctx.formParam("username");
@@ -129,7 +127,6 @@ public class LibraryApp {
             }
         });
 
-        // ================= ISSUE =================
 
         app.post("/issue", ctx -> {
             try {
@@ -137,24 +134,22 @@ public class LibraryApp {
                 int userId = Integer.parseInt(ctx.formParam("userId"));
 
                 try (Connection con = DBUtil.getConnection()) {
-                    // CHECK USER EXISTS
                     try (PreparedStatement checkUser = con.prepareStatement("SELECT id FROM users WHERE id=?")) {
                         checkUser.setInt(1, userId);
                         try (ResultSet userRs = checkUser.executeQuery()) {
                             if (!userRs.next()) {
-                                ctx.result("❌ User not found!");
+                                ctx.result(" User not found!");
                                 return;
                             }
                         }
                     }
 
-                    // CHECK BOOK AVAILABLE
                     try (PreparedStatement checkBook = con
                             .prepareStatement("SELECT id FROM books WHERE id=? AND available=true")) {
                         checkBook.setInt(1, bookId);
                         try (ResultSet bookRs = checkBook.executeQuery()) {
                             if (!bookRs.next()) {
-                                ctx.result("❌ Book not available!");
+                                ctx.result(" Book not available!");
                                 return;
                             }
                         }
@@ -176,7 +171,7 @@ public class LibraryApp {
                         stmt.executeUpdate("UPDATE books SET available=false WHERE id=" + bookId);
                     }
 
-                    ctx.result("✅ Book issued (Due in 7 days)");
+                    ctx.result(" Book issued (Due in 7 days)");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -184,7 +179,6 @@ public class LibraryApp {
             }
         });
 
-        // ================= RETURN =================
 
         app.post("/return", ctx -> {
             try {
@@ -196,7 +190,7 @@ public class LibraryApp {
                             ResultSet rs = stmt.executeQuery("SELECT due_date FROM issues WHERE book_id=" + bookId
                                     + " ORDER BY id DESC LIMIT 1")) {
                         if (!rs.next()) {
-                            ctx.result("❌ No issue record found!");
+                            ctx.result(" No issue record found!");
                             return;
                         }
                         due = rs.getDate("due_date").toLocalDate();
@@ -218,7 +212,6 @@ public class LibraryApp {
             }
         });
 
-        // ================= SEARCH =================
 
         app.get("/search", ctx -> {
             try {
@@ -257,6 +250,6 @@ public class LibraryApp {
             }
         });
 
-        System.out.println("✅ Server running at http://localhost:8080");
+        System.out.println(" Server running at http://localhost:8080");
     }
 }
