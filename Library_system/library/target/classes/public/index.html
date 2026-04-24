@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Library System</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #ecf0f1;
+        }
+
+        #login {
+            width: 300px;
+            margin: 100px auto;
+            background: white;
+            padding: 20px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 8px;
+            width: 90%;
+        }
+
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            border: none;
+        }
+
+        #dashboard {
+            display: none;
+        }
+
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background: #2c3e50;
+            color: white;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .sidebar button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: none;
+            color: white;
+        }
+
+        .sidebar button:hover {
+            background: #34495e;
+        }
+
+        .main {
+            margin-left: 210px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div id="login">
+        <h2>Admin Login</h2>
+        <input id="user" placeholder="Username"><br>
+        <input id="pass" type="password" placeholder="Password"><br>
+        <button onclick="login()">Login</button>
+        <p id="error" style="color:red;"></p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboard">
+
+        <div class="sidebar">
+            <h2>Library</h2>
+            <button onclick="show('books')">Books</button>
+            <button onclick="show('users')">Users</button>
+            <button onclick="show('issue')">Issue</button>
+            <button onclick="show('return')">Return</button>
+        </div>
+
+        <div class="main">
+
+            <!-- BOOKS -->
+            <div id="books" class="card">
+                <h3>Books</h3>
+
+                <input id="title" placeholder="Title">
+                <input id="author" placeholder="Author">
+                <button onclick="addBook()">Add Book</button>
+
+                <br><br>
+
+                <input id="search" placeholder="Search">
+                <button onclick="searchBooks()">Search</button>
+
+                <table id="bookTable"></table>
+            </div>
+
+            <!-- USERS -->
+            <div id="users" class="card" style="display:none">
+                <h3>User Management</h3>
+
+                <input id="username" placeholder="Username">
+                <button onclick="registerUser()">Register</button>
+
+                <br><br>
+
+                <button onclick="loadUsers()">View Users</button>
+
+                <table id="userTable"></table>
+            </div>
+
+            <!-- ISSUE -->
+            <div id="issue" class="card" style="display:none">
+                <h3>Issue Book</h3>
+                <input id="bid" placeholder="Book ID">
+                <input id="issueUserId" placeholder="User ID" type="number">
+                <button onclick="issueBook()">Issue</button>
+            </div>
+
+            <!-- RETURN -->
+            <div id="return" class="card" style="display:none">
+                <h3>Return Book</h3>
+                <input id="rid" placeholder="Book ID">
+                <button onclick="returnBook()">Return</button>
+                <p id="fine"></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        function login() {
+            let u = document.getElementById("user").value;
+            let p = document.getElementById("pass").value;
+
+            if (u === "admin" && p === "admin") {
+
+                document.getElementById("login").style.display = "none";
+                document.getElementById("dashboard").style.display = "block";
+
+                loadBooks();
+                loadUsers();
+
+            } else {
+                document.getElementById("error").innerText = "Invalid credentials";
+            }
+        }
+
+        function show(id) {
+            document.querySelectorAll(".card").forEach(c => c.style.display = "none");
+            document.getElementById(id).style.display = "block";
+        }
+
+        function loadBooks() {
+            fetch('/books')
+                .then(res => res.json())
+                .then(data => {
+
+                    let table = document.getElementById("bookTable");
+
+                    table.innerHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+        </tr>`;
+
+                    data.forEach(b => {
+                        table.innerHTML += `
+            <tr>
+                <td>${b.id}</td>
+                <td>${b.title}</td>
+                <td>${b.author}</td>
+                <td>${b.available ? "Available" : "Issued"}</td>
+            </tr>`;
+                    });
+                })
+                .catch(err => alert("Error loading books"));
+        }
+
+        function addBook() {
+            fetch('/add-book', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `title=${title.value}&author=${author.value}`
+            })
+                .then(r => r.text())
+                .then(msg => {
+                    alert(msg);
+                    loadBooks();
+                });
+        }
+
+        function searchBooks() {
+            fetch(`/search?key=${search.value}`)
+                .then(r => r.json())
+                .then(data => {
+
+                    let table = document.getElementById("bookTable");
+
+                    table.innerHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>`;
+
+                    data.forEach(b => {
+                        table.innerHTML += `
+            <tr>
+                <td>${b.id}</td>
+                <td>${b.title}</td>
+                <td>${b.author}</td>
+            </tr>`;
+                    });
+                });
+        }
+
+        function registerUser() {
+            fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `username=${username.value}`
+            })
+                .then(r => r.text())
+                .then(msg => {
+                    alert(msg);
+                    loadUsers();
+                });
+        }
+
+        function loadUsers() {
+            fetch('/users')
+                .then(res => res.json())
+                .then(data => {
+
+                    let table = document.getElementById("userTable");
+
+                    table.innerHTML = `
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>`;
+
+                    data.forEach(u => {
+                        table.innerHTML += `
+            <tr>
+                <td>${u.id}</td>
+                <td>${u.name}</td>
+            </tr>`;
+                    });
+                })
+                .catch(err => alert("Error loading users"));
+        }
+
+        function issueBook() {
+            let userIdValue = document.getElementById("issueUserId").value;
+            fetch('/issue', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `bookId=${bid.value}&userId=${userIdValue}`
+            })
+                .then(r => r.text())
+                .then(msg => {
+                    alert(msg);
+                    loadBooks();
+                });
+        }
+
+        function returnBook() {
+            fetch(`/return?bookId=${rid.value}`, { method: 'POST' })
+                .then(r => r.text())
+                .then(msg => {
+                    fine.innerText = msg;
+                    loadBooks();
+                });
+        }
+
+    </script>
+
+</body>
+
+</html>
